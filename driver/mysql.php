@@ -77,7 +77,7 @@ class Driver extends BaseDriver
     private function _getTableAndViewResult($type)
     {
         $tableNames = array_map(function($tableName) { return "'" . trim($tableName) . "'";}, explode(',', COMPARE_TABLES));
-        $filterTableNames = COMPARE_TABLES ? ' AND cl.TABLE_NAME IN (' . implode('`,`', $tableNames) . ')' : '';
+        $filterTableNames = COMPARE_TABLES ? ' AND cl.TABLE_NAME IN (' . implode(',', $tableNames) . ')' : '';
         $query = "SELECT
                     cl.TABLE_NAME ARRAY_KEY_1,
                     cl.COLUMN_NAME ARRAY_KEY_2,
