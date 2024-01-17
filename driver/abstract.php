@@ -8,16 +8,16 @@ abstract class BaseDriver
 
     protected function _getFirstConnect()
     {
-        return $this->_getConnect(FIRST_DSN, FIRST_BASE_NAME);
+        return $this->_getConnect(FIRST_DSN, FIRST_BASE_NAME, FIRST_DSN_OPTIONS);
     }
 
 
     protected function _getSecondConnect()
     {
-        return $this->_getConnect(SECOND_DSN, SECOND_BASE_NAME);
+        return $this->_getConnect(SECOND_DSN, SECOND_BASE_NAME, SECOND_DSN_OPTIONS);
     }
 
-    protected function _getConnect($dsn)
+    protected function _getConnect($dsn, $baseName, $dsnOptions = [])
     {
         if (!isset($this->_dsn[$dsn])) {
             $pdsn = parse_url($dsn);
@@ -30,10 +30,15 @@ abstract class BaseDriver
                 $dsn = DRIVER . ':host=' . $pdsn['host'] . ';port=' . $pdsn['port'] . ';dbname=' . substr($pdsn['path'], 1, 1000) . (DRIVER !== 'pgsql' ? ';charset=' . DATABASE_ENCODING : '');
             }
 
-            $this->_dsn[$dsn] = new PDO($dsn, $pdsn['user'], isset($pdsn['pass']) ? $pdsn['pass'] : '', array(
+            $options = array(
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-            ));
+            );
+            if($dsnOptions['DATABASE_SSL'] == 'true') {
+                $options[PDO::MYSQL_ATTR_SSL_CA] = true;
+                $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
+            }
+            $this->_dsn[$dsn] = new PDO($dsn, $pdsn['user'], isset($pdsn['pass']) ? $pdsn['pass'] : '', );
         }
         return $this->_dsn[$dsn];
     }
