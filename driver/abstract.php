@@ -38,7 +38,7 @@ abstract class BaseDriver
                 $options[PDO::MYSQL_ATTR_SSL_CA] = true;
                 $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false;
             }
-            $this->_dsn[$dsn] = new PDO($dsn, $pdsn['user'], isset($pdsn['pass']) ? $pdsn['pass'] : '', );
+            $this->_dsn[$dsn] = new PDO($dsn, $pdsn['user'], isset($pdsn['pass']) ? $pdsn['pass'] : '', $options);
         }
         return $this->_dsn[$dsn];
     }
