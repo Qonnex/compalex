@@ -25,7 +25,7 @@ class Driver extends BaseDriver
                 TABLE_NAME ARRAY_KEY_1,
                 ENGINE engine,
                 TABLE_COLLATION collation,
-                Auto_increment auto_increment,
+                Auto_increment auto_increment
             FROM
                 information_schema.TABLES
             WHERE
