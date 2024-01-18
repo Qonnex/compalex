@@ -106,6 +106,11 @@
                     target="_blank"
                     onclick="Data.getTableData('index.php?action=rows&blockType=<?php echo ($blockType == 'fArray' ? 'first' : 'second');?>&baseName=<?php echo $basesName[$blockType]; ?>&tableName=<?php echo $tableNameCaseSensitive; ?>'); return false;"
                     href="#" class="sample-data">Sample data (<?php echo SAMPLE_DATA_LENGTH; ?> rows)</a><?php } ?>
+
+                <?php if ($data != null && isset($data[$blockType]) && $data[$blockType] != null && count($data[$blockType]) && in_array($_REQUEST['action'], array('tables', 'views'))) { ?><a
+                    target="_blank"
+                    onclick="Data.getTableData('index.php?action=rows-compare&blockType=<?php echo ($blockType == 'fArray' ? 'first' : 'second');?>&baseName=<?php echo $basesName[$blockType]; ?>&tableName=<?php echo $tableNameCaseSensitive; ?>'); return false;"
+                    href="#" class="sample-data">Compare data (<?php echo SAMPLE_DATA_LENGTH; ?> rows)</a><?php } ?>
             </td>
             <?php
             } 

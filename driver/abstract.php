@@ -226,5 +226,55 @@ abstract class BaseDriver
         return $out;
     }
 
+    public function getTableRowsAndCompare($tableName, $rowCount = SAMPLE_DATA_LENGTH)
+    {
+        // if (!$baseName) throw new Exception('$baseName is not set');
+        if (!$tableName) throw new Exception('$tableName is not set');
+        $rowCount = (int)$rowCount;
+        $tableName = preg_replace("$[^A-z0-9.,-_]$", '', $tableName);
+        $baseName = FIRST_BASE_NAME;
+        switch (DRIVER) {
+            case "mssql":
+            case "dblib":
+            case "mssql":
+            case "sqlsrv":
+                $query = 'SELECT TOP ' . $rowCount . ' * FROM ' . $baseName . '..' . $tableName;
+                break;
+            case "pgsql":
+            case "mysql":
+                $query = 'SELECT * FROM ' . $tableName . ' LIMIT ' . $rowCount;
+                break;
+            case "oci":
+            case "oci8":
+                $query = 'SELECT * FROM ' . $tableName . ' FETCH FIRST ' . $rowCount . ' ROWS ONLY ';
+                break;
+            default:
+                throw new Exception('Select query not set');
 
+        }
+        //if ($baseName === FIRST_BASE_NAME) {
+        $resultFirst = $this->_select($query, $this->_getFirstConnect(), FIRST_BASE_NAME);
+        $resultSecond = $this->_select($query, $this->_getSecondConnect(), SECOND_BASE_NAME);
+
+        if ($resultFirst && $resultSecond) {
+            $firstRow = array_shift($result);
+
+            $out[] = array_keys($firstRow);
+            $out[] = array_values($firstRow);
+            var_dump($out);
+            exit();
+
+            foreach ($result as $row) {
+                $out[] = array_values($row);
+            }
+        } else {
+            $out = array();
+        }
+
+        if (DATABASE_ENCODING != 'utf-8' && $out) {
+            // $out = array_map(function($item){ return array_map(function($itm){ return iconv(DATABASE_ENCODING, 'utf-8', $itm); }, $item); }, $out);
+        }
+
+        return $out;
+    }
 }

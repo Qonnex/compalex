@@ -25,26 +25,37 @@ try {
     $additionalTableInfo = array();
     switch ($action) {
         case "tables":
+            $template = 'compare';
             $tables = Driver::getInstance()->getCompareTables();
             $additionalTableInfo = Driver::getInstance()->getAdditionalTableInfo();
             break;
         case "views":
+            $template = 'compare';
             $tables = Driver::getInstance()->getCompareViews();
             break;
         case "procedures":
+            $template = 'compare';
             $tables = Driver::getInstance()->getCompareProcedures();
             break;
         case "functions":
+            $template = 'compare';
             $tables = Driver::getInstance()->getCompareFunctions();
             break;
         case "indexes":
+            $template = 'compare';
             $tables = Driver::getInstance()->getCompareKeys();
             break;
         case "triggers":
+            $template = 'compare';
             $tables = Driver::getInstance()->getCompareTriggers();
             break;
         case "rows":
+            $template = 'rows';
             $rows = Driver::getInstance()->getTableRows($_REQUEST['blockType'], $_REQUEST['baseName'], $_REQUEST['tableName']);
+            break;
+        case "rows-compare":
+            $template = 'rows-compare';
+            $rows = Driver::getInstance()->getTableRowsAndCompare($_REQUEST['tableName']);
             break;
     }
 
@@ -54,10 +65,8 @@ try {
         'sArray' => SECOND_BASE_NAME
     );
 
-    if ($action == 'rows') {
-        require_once TEMPLATE_DIR . 'rows.php';
-    } else {
-        require_once TEMPLATE_DIR . 'compare.php';
+    if ($template) {
+        require_once TEMPLATE_DIR . $template . '.php';
     }
 
 } catch (Exception $e) {
