@@ -72,8 +72,15 @@ abstract class BaseDriver
         $allTables = array_unique(array_merge(array_keys($fArray), array_keys($sArray)));
         sort($allTables);
 
+        foreach($fArray as $key => $value) {
+            $firstArrayKeys[strtolower($key)] = $key;
+        }
+        foreach($sArray as $key => $value) {
+            $secondArrayKeys[strtolower($key)] = $key;
+        }
+
         foreach ($allTables as $v) {
-            $allFields = array_unique(array_merge(array_keys((array)@$fArray[$v]), array_keys((array)@$sArray[$v])));
+            $allFields = array_unique(array_merge(array_keys((array)@$fArray[$firstArrayKeys[$v]]), array_keys((array)@$sArray[$secondArrayKeys[$v]])));
             foreach ($allFields as $f) {
                 switch (true) {
                     case (!isset($fArray[$v][$f])):

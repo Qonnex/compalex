@@ -49,6 +49,8 @@ class Driver extends BaseDriver
 
     public function getCompareKeys()
     {
+        $tableNames = array_map(function($tableName) { return "'" . trim($tableName) . "'";}, explode(',', COMPARE_TABLES));
+        $filterTableNames = COMPARE_TABLES ? ' AND TABLE_NAME IN (' . implode(',', $tableNames) . ')' : '';
         $query = 'SELECT
                     CONCAT(TABLE_NAME, \' [\', INDEX_NAME, \'] \') ARRAY_KEY_1,
                     COLUMN_NAME  ARRAY_KEY_2,
@@ -56,6 +58,7 @@ class Driver extends BaseDriver
                   FROM INFORMATION_SCHEMA.STATISTICS
                   WHERE
                     TABLE_SCHEMA = \'<<BASENAME>>\'
+                    {$filterTableNames}
                   ORDER BY
                     TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX';
         return $this->_getCompareArray($query);
@@ -79,7 +82,7 @@ class Driver extends BaseDriver
         $tableNames = array_map(function($tableName) { return "'" . trim($tableName) . "'";}, explode(',', COMPARE_TABLES));
         $filterTableNames = COMPARE_TABLES ? ' AND cl.TABLE_NAME IN (' . implode(',', $tableNames) . ')' : '';
         $query = "SELECT
-                    LOWER(cl.TABLE_NAME) ARRAY_KEY_1,
+                    cl.TABLE_NAME ARRAY_KEY_1,
                     cl.COLUMN_NAME ARRAY_KEY_2,
                     cl.COLUMN_TYPE dtype
                   FROM information_schema.columns cl,  information_schema.TABLES ss
