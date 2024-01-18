@@ -24,7 +24,8 @@ class Driver extends BaseDriver
         $query = "SELECT
                 TABLE_NAME ARRAY_KEY_1,
                 ENGINE engine,
-                TABLE_COLLATION collation
+                TABLE_COLLATION collation,
+                Auto_increment auto_increment,
             FROM
                 information_schema.TABLES
             WHERE

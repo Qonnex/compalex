@@ -55,7 +55,7 @@ try {
             break;
         case "rows-compare":
             $template = 'rows-compare';
-            $rows = Driver::getInstance()->getTableRowsAndCompare($_REQUEST['firstTableName'], $_REQUEST['secondTableName']);
+            $rows = Driver::getInstance()->getTableRowsAndCompare($_REQUEST['firstTableName'], $_REQUEST['secondTableName'], $_REQUEST['autoIncrementalField']);
             break;
     }
 
