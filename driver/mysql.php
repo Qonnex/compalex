@@ -51,16 +51,16 @@ class Driver extends BaseDriver
     {
         $tableNames = array_map(function($tableName) { return "'" . trim($tableName) . "'";}, explode(',', COMPARE_TABLES));
         $filterTableNames = COMPARE_TABLES ? ' AND TABLE_NAME IN (' . implode(',', $tableNames) . ')' : '';
-        $query = 'SELECT
-                    CONCAT(TABLE_NAME, \' [\', INDEX_NAME, \'] \') ARRAY_KEY_1,
+        $query = "SELECT
+                    CONCAT(TABLE_NAME, ' [', INDEX_NAME, '] ') ARRAY_KEY_1,
                     COLUMN_NAME  ARRAY_KEY_2,
-                    CONCAT(\'(\' , SEQ_IN_INDEX, \')\') dtype
+                    CONCAT('(' , SEQ_IN_INDEX, ')') dtype
                   FROM INFORMATION_SCHEMA.STATISTICS
                   WHERE
-                    TABLE_SCHEMA = \'<<BASENAME>>\'
+                    TABLE_SCHEMA = '<<BASENAME>>'
                     {$filterTableNames}
                   ORDER BY
-                    TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX';
+                    TABLE_NAME, INDEX_NAME, SEQ_IN_INDEX";
         return $this->_getCompareArray($query);
     }
 

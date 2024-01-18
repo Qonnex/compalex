@@ -257,7 +257,7 @@ abstract class BaseDriver
         $resultSecond = $this->_select($query, $this->_getSecondConnect(), SECOND_BASE_NAME);
 
         if ($resultFirst && $resultSecond) {
-            $firstRow = array_shift($result);
+            $firstRow = array_shift($resultFirst);
 
             $out[] = array_keys($firstRow);
             $out[] = array_values($firstRow);
