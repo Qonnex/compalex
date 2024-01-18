@@ -257,16 +257,20 @@ abstract class BaseDriver
         $resultSecond = $this->_select($query, $this->_getSecondConnect(), SECOND_BASE_NAME);
 
         if ($resultFirst && $resultSecond) {
-            $firstRow = array_shift($resultFirst);
+            //$firstRow = array_shift($resultFirst);
 
-            $out[] = array_keys($firstRow);
-            $out[] = array_values($firstRow);
+            $out[] = array_keys($resultFirst[array_key_first($resultFirst)]);
+            //$out[] = array_values($firstRow);
 
             foreach ($resultFirst as $key => $row) {
                 $values = array_diff($resultFirst[$key], $resultSecond[$key]);
+                // print_r($values);
+                // var_dump($resultFirst[$key]);
+                // var_dump($resultSecond[$key]);
+                // exit();
                 if(!empty($values)) {
                     foreach($values as $fieldName => $fieldValue) {
-                        $row[$fieldName] = $row[$fieldName] . ' <span style="color: red;">' . $fieldValue . '</span>';
+                        $row[$fieldName] = $row[$fieldName] . ' <span style="color: red;">' . $resultSecond[$key][$fieldName] . '</span>';
                     }
                     // $out[] = array_values($values);
                     $out[] = array_values($row);
