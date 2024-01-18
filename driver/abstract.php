@@ -261,11 +261,16 @@ abstract class BaseDriver
 
             $out[] = array_keys($firstRow);
             $out[] = array_values($firstRow);
-            var_dump($out);
-            exit();
 
-            foreach ($result as $row) {
-                $out[] = array_values($row);
+            foreach ($resultFirst as $key => $row) {
+                $values = array_diff($resultFirst[$key], $resultSecond[$key]);
+                if(!empty($values)) {
+                    foreach($values as $fieldName => $fieldValue) {
+                        $row[$fieldName] = $row[$fieldName] . ' <span style="color: red;">' . $fieldValue . '</span>';
+                    }
+                    // $out[] = array_values($values);
+                    $out[] = array_values($row);
+                }
             }
         } else {
             $out = array();
