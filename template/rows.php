@@ -14,7 +14,7 @@
                     echo '
                     <td>';
                     if(strlen($rowItem) > 100) {
-                        echo '<div class="field-value-compressed">' . $rowItem . '</div>';
+                        echo '<div class="field-value-compressed">' . htmlspecialchars($rowItem) . '</div>';
                     } else {
                         echo $rowItem;
                     }
