@@ -25,7 +25,16 @@ class Driver extends BaseDriver
                 TABLE_NAME ARRAY_KEY_1,
                 ENGINE engine,
                 TABLE_COLLATION collation,
-                Auto_increment auto_increment
+                (
+                  SELECT column_name, column_key, extra 
+                  FROM information_schema.columns 
+                  WHERE 
+                    table_schema=DATABASE() AND 
+                    table_name=TABLES.TABLE_NAME AND
+                    column_key='PRI' AND
+                    extra LIKE '%auto_increment%'
+                  LIMIT 1
+                ) auto_incremental_field
             FROM
                 information_schema.TABLES
             WHERE
