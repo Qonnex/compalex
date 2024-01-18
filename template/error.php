@@ -6,7 +6,8 @@
     <script src="/public/js/jquery.min.js"></script>
     <script src="/public/js/functional.js"></script>
     <style type="text/css" media="all">
-        @import url("/public/css/style.css");
+        @import url("public/css/style.css");
+        @import url("public/css/custom.css");
     </style>
 </head>
 
