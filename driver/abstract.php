@@ -266,6 +266,10 @@ abstract class BaseDriver
             //$out[] = array_values($firstRow);
 
             foreach ($resultFirst as $key => $row) {
+                if(!is_array($resultFirst[$key]) || !is_array($resultSecond[$key])) {
+                    $out[] = array_values($row);
+                    continue;
+                }
                 $values = array_diff($resultFirst[$key], $resultSecond[$key]);
                 // print_r($values);
                 // var_dump($resultFirst[$key]);

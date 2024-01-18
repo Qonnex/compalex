@@ -5,6 +5,7 @@
     @import url("public/css/custom.css");
 </style>
 
+<h2><?php echo $_REQUEST['firstTableName'] === $_REQUEST['secondTableName'];?></h2>
 <?php if (count($rows)) { ?>
     <table class="data-table">
         <?php foreach ($rows as $row) { ?>
