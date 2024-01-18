@@ -8,9 +8,17 @@
     <table class="data-table">
         <?php foreach ($rows as $row) { ?>
             <tr>
-                <?php foreach ($row as $rowItem) { ?>
-                    <td><?php echo $rowItem; ?></td>
-                <?php } ?>
+                <?php
+                foreach ($row as $rowItem) {
+                    echo '
+                    <td>';
+                    if(strlen($rowItem) > 100) {
+                        echo '<div class="field-value-compressed">' . $rowItem . '</div>';
+                    } else {
+                        echo $rowItem;
+                    }
+                    echo '</td>';
+                } ?>
             </tr>
         <?php } ?>
     </table>
