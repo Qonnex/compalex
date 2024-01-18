@@ -69,7 +69,12 @@ abstract class BaseDriver
         $fArray = $this->_prepareOutArray($this->_select($query, $this->_getFirstConnect(), FIRST_BASE_NAME), $diffMode, $ifOneLevelDiff);
         $sArray = $this->_prepareOutArray($this->_select($query, $this->_getSecondConnect(), SECOND_BASE_NAME), $diffMode, $ifOneLevelDiff);
 
-        $allTables = array_unique(array_merge(array_keys($fArray), array_keys($sArray)));
+        $firstLowercaseArray = array_change_key_case($fArray, CASE_LOWER);
+        $secondLowercaseArray = array_change_key_case($sArray, CASE_LOWER);
+        
+        $allTables = array_unique(array_merge(array_keys($firstLowercaseArray), array_keys($secondLowercaseArray)));
+
+        //$allTables = array_unique(array_merge(array_keys($fArray), array_keys($sArray)));
         sort($allTables);
 
         foreach($fArray as $key => $value) {
@@ -83,27 +88,27 @@ abstract class BaseDriver
             $allFields = array_unique(array_merge(array_keys((array)@$fArray[$firstArrayKeys[$v]]), array_keys((array)@$sArray[$secondArrayKeys[$v]])));
             foreach ($allFields as $f) {
                 switch (true) {
-                    case (!isset($fArray[$v][$f])):
+                    case (!isset($fArray[$firstArrayKeys[$v]][$f])):
                     {
-                        if (is_array($sArray[$v][$f])) $sArray[$v][$f]['isNew'] = true;
+                        if (is_array($sArray[$secondArrayKeys[$v]][$f])) $sArray[$secondArrayKeys[$v]][$f]['isNew'] = true;
                         break;
                     }
-                    case (!isset($sArray[$v][$f])):
+                    case (!isset($sArray[$secondArrayKeys[$v]][$f])):
                     {
-                        if (is_array($fArray[$v][$f])) $fArray[$v][$f]['isNew'] = true;
+                        if (is_array($fArray[$firstArrayKeys[$v]][$f])) $fArray[$firstArrayKeys[$v]][$f]['isNew'] = true;
                         break;
                     }
-                    case (isset($fArray[$v][$f]['dtype']) && isset($sArray[$v][$f]['dtype']) && ($fArray[$v][$f]['dtype'] != $sArray[$v][$f]['dtype'])) :
+                    case (isset($fArray[$firstArrayKeys[$v]][$f]['dtype']) && isset($sArray[$secondArrayKeys[$v]][$f]['dtype']) && ($fArray[$firstArrayKeys[$v]][$f]['dtype'] != $sArray[$secondArrayKeys[$v]][$f]['dtype'])) :
                     {
-                        $fArray[$v][$f]['changeType'] = true;
-                        $sArray[$v][$f]['changeType'] = true;
+                        $fArray[$firstArrayKeys[$v]][$f]['changeType'] = true;
+                        $sArray[$secondArrayKeys[$v]][$f]['changeType'] = true;
                         break;
                     }
                 }
             }
             $out[$v] = array(
-                'fArray' => @$fArray[$v],
-                'sArray' => @$sArray[$v]
+                'fArray' => @$fArray[$firstArrayKeys[$v]],
+                'sArray' => @$sArray[$secondArrayKeys[$v]]
             );
         }
         return $out;
@@ -169,7 +174,7 @@ abstract class BaseDriver
         throw new Exception(__METHOD__ . ' Not work');
     }
 
-    public function getTableRows($baseName, $tableName, $rowCount = SAMPLE_DATA_LENGTH)
+    public function getTableRows($connectionType, $baseName, $tableName, $rowCount = SAMPLE_DATA_LENGTH)
     {
         if (!$baseName) throw new Exception('$baseName is not set');
         if (!$tableName) throw new Exception('$tableName is not set');
@@ -194,7 +199,8 @@ abstract class BaseDriver
                 throw new Exception('Select query not set');
 
         }
-        if ($baseName === FIRST_BASE_NAME) {
+        //if ($baseName === FIRST_BASE_NAME) {
+        if ($connectionType === 'first') {
             $result = $this->_select($query, $this->_getFirstConnect(), FIRST_BASE_NAME);
         } else {
             $result = $this->_select($query, $this->_getSecondConnect(), SECOND_BASE_NAME);

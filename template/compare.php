@@ -72,9 +72,12 @@
         </tr>
     <?php foreach ($tables as $tableName => $data) { ?>
         <tr class="data">
-            <?php foreach (array('fArray', 'sArray') as $blockType) { ?>
+            <?php
+            foreach (array('fArray', 'sArray') as $blockType) {
+                $tableNameCaseSensitive = $data[$blockType][array_key_first($data[$blockType])]['ARRAY_KEY_1'];
+                ?>
             <td class="type-<?php echo $_REQUEST['action']; ?>">
-                <h3><?php echo $tableName; ?> <sup style="color: red;"><?php 
+                <h3><?php echo $tableNameCaseSensitive; ?> <sup style="color: red;"><?php 
                 if ($data != null && isset($data[$blockType]) && $data[$blockType] != null) {
                     echo count($data[$blockType]); 
                 }?></sup></h3>
@@ -101,10 +104,12 @@
                 <?php } ?>
                 <?php if ($data != null && isset($data[$blockType]) && $data[$blockType] != null && count($data[$blockType]) && in_array($_REQUEST['action'], array('tables', 'views'))) { ?><a
                     target="_blank"
-                    onclick="Data.getTableData('index.php?action=rows&baseName=<?php echo $basesName[$blockType]; ?>&tableName=<?php echo $tableName; ?>'); return false;"
+                    onclick="Data.getTableData('index.php?action=rows&blockType=<?php echo ($blockType == 'fArray' ? 'first' : 'second');?>baseName=<?php echo $basesName[$blockType]; ?>&tableName=<?php echo $tableNameCaseSensitive; ?>'); return false;"
                     href="#" class="sample-data">Sample data (<?php echo SAMPLE_DATA_LENGTH; ?> rows)</a><?php } ?>
             </td>
-            <?php } ?>
+            <?php
+            } 
+            ?>
         </tr>
     <?php } ?>
     </table>

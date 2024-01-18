@@ -44,7 +44,7 @@ try {
             $tables = Driver::getInstance()->getCompareTriggers();
             break;
         case "rows":
-            $rows = Driver::getInstance()->getTableRows($_REQUEST['baseName'], $_REQUEST['tableName']);
+            $rows = Driver::getInstance()->getTableRows($_REQUEST['blockType'], $_REQUEST['baseName'], $_REQUEST['tableName']);
             break;
     }
 
