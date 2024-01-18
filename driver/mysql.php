@@ -18,6 +18,8 @@ class Driver extends BaseDriver
 
     public function getAdditionalTableInfo()
     {
+        $tableNames = array_map(function($tableName) { return "'" . trim($tableName) . "'";}, explode(',', COMPARE_TABLES));
+        $filterTableNames = COMPARE_TABLES ? ' AND TABLE_NAME IN (' . implode(',', $tableNames) . ')' : '';
         $type = 'BASE TABLE';
         $query = "SELECT
                 TABLE_NAME ARRAY_KEY_1,
@@ -27,7 +29,9 @@ class Driver extends BaseDriver
                 information_schema.TABLES
             WHERE
                 TABLE_SCHEMA = '<<BASENAME>>' AND
-                TABLE_TYPE = '{$type}'";
+                TABLE_TYPE = '{$type}'
+                {$filterTableNames}
+            ";
         return $this->_getCompareArray($query, false, true);
 
     }

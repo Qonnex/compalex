@@ -64,7 +64,6 @@ abstract class BaseDriver
 
     protected function _getCompareArray($query, $diffMode = false, $ifOneLevelDiff = false)
     {
-
         $out = array();
         $fArray = $this->_prepareOutArray($this->_select($query, $this->_getFirstConnect(), FIRST_BASE_NAME), $diffMode, $ifOneLevelDiff);
         $sArray = $this->_prepareOutArray($this->_select($query, $this->_getSecondConnect(), SECOND_BASE_NAME), $diffMode, $ifOneLevelDiff);
@@ -226,27 +225,31 @@ abstract class BaseDriver
         return $out;
     }
 
-    public function getTableRowsAndCompare($tableName, $rowCount = SAMPLE_DATA_LENGTH)
+    public function getTableRowsAndCompare($firstTableName, $secondTableName, $rowCount = SAMPLE_DATA_LENGTH)
     {
         // if (!$baseName) throw new Exception('$baseName is not set');
-        if (!$tableName) throw new Exception('$tableName is not set');
+        if (!$firstTableName) throw new Exception('$tableName is not set');
         $rowCount = (int)$rowCount;
-        $tableName = preg_replace("$[^A-z0-9.,-_]$", '', $tableName);
+        $firstTableName = preg_replace("$[^A-z0-9.,-_]$", '', $firstTableName);
+        $secondTableName = preg_replace("$[^A-z0-9.,-_]$", '', $secondTableName);
         $baseName = FIRST_BASE_NAME;
         switch (DRIVER) {
             case "mssql":
             case "dblib":
             case "mssql":
             case "sqlsrv":
-                $query = 'SELECT TOP ' . $rowCount . ' * FROM ' . $baseName . '..' . $tableName;
+                $query = 'SELECT TOP ' . $rowCount . ' * FROM ' . $baseName . '..' . $firstTableName;
+                $query2 = 'SELECT TOP ' . $rowCount . ' * FROM ' . $baseName . '..' . $secondTableName;
                 break;
             case "pgsql":
             case "mysql":
-                $query = 'SELECT * FROM ' . $tableName . ' LIMIT ' . $rowCount;
+                $query = 'SELECT * FROM ' . $firstTableName . ' LIMIT ' . $rowCount;
+                $query2 = 'SELECT * FROM ' . $secondTableName . ' LIMIT ' . $rowCount;
                 break;
             case "oci":
             case "oci8":
-                $query = 'SELECT * FROM ' . $tableName . ' FETCH FIRST ' . $rowCount . ' ROWS ONLY ';
+                $query = 'SELECT * FROM ' . $firstTableName . ' FETCH FIRST ' . $rowCount . ' ROWS ONLY ';
+                $query2 = 'SELECT * FROM ' . $secondTableName . ' FETCH FIRST ' . $rowCount . ' ROWS ONLY ';
                 break;
             default:
                 throw new Exception('Select query not set');
@@ -254,7 +257,7 @@ abstract class BaseDriver
         }
         //if ($baseName === FIRST_BASE_NAME) {
         $resultFirst = $this->_select($query, $this->_getFirstConnect(), FIRST_BASE_NAME);
-        $resultSecond = $this->_select($query, $this->_getSecondConnect(), SECOND_BASE_NAME);
+        $resultSecond = $this->_select($query2, $this->_getSecondConnect(), SECOND_BASE_NAME);
 
         if ($resultFirst && $resultSecond) {
             //$firstRow = array_shift($resultFirst);
