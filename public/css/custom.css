@@ -10,8 +10,9 @@
     white-space: nowrap;
 }
 .data-table .field-value-compressed:hover {
-    overflow: visible;
+    overflow: scroll;
     white-space: normal;
-    width: 500px;
-    height: 500px;
+    width: 200px;
+    height: auto;
+    max-height: 100px;
 }
