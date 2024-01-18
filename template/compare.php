@@ -111,7 +111,12 @@
 
                 <?php if ($data != null && isset($data[$blockType]) && $data[$blockType] != null && count($data[$blockType]) && in_array($_REQUEST['action'], array('tables', 'views'))) { ?><a
                     target="_blank"
-                    onclick="Data.getTableData('index.php?action=rows-compare&firstTableName=<?php echo $firstTableNameCaseSensitive; ?>&secondTableName=<?php echo $secondTableNameCaseSensitive; ?>'); return false;"
+                    onclick="Data.getTableData('<?php 
+                    echo 'index.php?action=rows-compare' . 
+                    '&firstTableName=' . $firstTableNameCaseSensitive .
+                    '&secondTableName=' . $secondTableNameCaseSensitive .
+                    '&autoIncrementalField=' . $additionalTableInfo[$tableName]['fArray']['auto_incremental_field'];
+                    ?>'); return false;"
                     href="#" class="sample-data">Compare data (<?php echo SAMPLE_DATA_LENGTH; ?> rows)</a><?php } ?>
             </td>
             <?php

@@ -225,7 +225,7 @@ abstract class BaseDriver
         return $out;
     }
 
-    public function getTableRowsAndCompare($firstTableName, $secondTableName, $rowCount = SAMPLE_DATA_LENGTH)
+    public function getTableRowsAndCompare($firstTableName, $secondTableName, $autoIncrementalField, $rowCount = SAMPLE_DATA_LENGTH)
     {
         // if (!$baseName) throw new Exception('$baseName is not set');
         if (!$firstTableName) throw new Exception('$tableName is not set');
@@ -243,8 +243,8 @@ abstract class BaseDriver
                 break;
             case "pgsql":
             case "mysql":
-                $query = 'SELECT * FROM ' . $firstTableName . ' LIMIT ' . $rowCount;
-                $query2 = 'SELECT * FROM ' . $secondTableName . ' LIMIT ' . $rowCount;
+                $query = 'SELECT * FROM ' . $firstTableName . ' ORDER BY ' . preg_replace("/[^A-Za-z0-9_]/", '', $autoIncrementalField) . ' DESC LIMIT ' . $rowCount;
+                $query2 = 'SELECT * FROM ' . $secondTableName . ' ORDER BY ' . preg_replace("/[^A-Za-z0-9_]/", '', $autoIncrementalField) . ' DESC LIMIT ' . $rowCount;
                 break;
             case "oci":
             case "oci8":
