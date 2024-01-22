@@ -270,6 +270,12 @@ abstract class BaseDriver
                     $out[] = array_values($row);
                     continue;
                 }
+
+                // if $resultFirst row $autoIncremental column is a value that does not exist in $resultSecond, then do not compare
+                if(!isset($resultSecond[$key][$autoIncrementalField]) || $resultFirst[$key][$autoIncrementalField] != $resultSecond[$key][$autoIncrementalField]) {
+                    continue;
+                }
+
                 $values = array_diff($resultFirst[$key], $resultSecond[$key]);
                 // print_r($values);
                 // var_dump($resultFirst[$key]);
