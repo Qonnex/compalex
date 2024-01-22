@@ -225,6 +225,8 @@ abstract class BaseDriver
         return $out;
     }
 
+
+
     public function getTableRowsAndCompare($firstTableName, $secondTableName, $autoIncrementalField, $rowCount = SAMPLE_DATA_LENGTH)
     {
         // if (!$baseName) throw new Exception('$baseName is not set');
@@ -265,14 +267,50 @@ abstract class BaseDriver
             $out[] = array_keys($resultFirst[array_key_first($resultFirst)]);
             //$out[] = array_values($firstRow);
 
+            $missingPrimary = [];
             foreach ($resultFirst as $key => $row) {
-                if(!is_array($resultFirst[$key]) || !is_array($resultSecond[$key])) {
+                if(array_search($row[$autoIncrementalField], array_column($resultSecond, $autoIncrementalField)) === false) {
+                    unset($resultFirst[$key]);
+                    $missingPrimary[] = $row[$autoIncrementalField];
+                }
+            }
+            $resultFirst = array_values($resultFirst);
+
+            // foreach ($resultFirst as $key => $row) {
+            //     if($resultFirst[$key][$autoIncrementalField] == $resultSecond[$key][$autoIncrementalField]) {
+            //         continue;
+            //     }
+
+            //     if($resultFirst[$key][$autoIncrementalField] == $resultSecond[$key+1][$autoIncrementalField]) {
+            //         echo 'add to second ';
+            //         // var_dump($resultSecond[$key+1][$autoIncrementalField]);
+            //         array_splice($resultFirst, $key, 0, [[]]);
+            //         // var_dump($resultSecond[$key+1][$autoIncrementalField]);
+
+            //     } elseif($resultFirst[0][$autoIncrementalField] != $resultSecond[0][$autoIncrementalField] && $resultFirst[1][$autoIncrementalField] == $resultSecond[0][$autoIncrementalField]) {
+            //         echo 'add to first';
+            //         array_splice($resultSecond, $key-1, 0, [[]]);
+            //     } elseif($resultFirst[0][$autoIncrementalField] != $resultSecond[0][$autoIncrementalField]) {
+            //         var_dump($resultFirst[0], $resultSecond[0]);
+            //     }
+            // }
+
+            foreach ($resultFirst as $key => $row) {
+
+                // if(array_search($row[$autoIncrementalField], array_column($resultSecond, $autoIncrementalField)) === false) {
+                //     continue;
+                // }
+
+                if(!is_array($resultSecond[$key])) {
+                    $row[$autoIncrementalField] = $row[$autoIncrementalField] . ' <span style="color: red;">resultSecond row is empty</span>';
                     $out[] = array_values($row);
                     continue;
                 }
 
                 // if $resultFirst row $autoIncremental column is a value that does not exist in $resultSecond, then do not compare
                 if(!isset($resultSecond[$key][$autoIncrementalField]) || $resultFirst[$key][$autoIncrementalField] != $resultSecond[$key][$autoIncrementalField]) {
+                    $row[$autoIncrementalField] = $row[$autoIncrementalField] . ' <span style="color: red;">primary key ( ' . $resultFirst[$key][$autoIncrementalField] . ' ) is not the same in secondary database: ' . $resultSecond[$key][$autoIncrementalField] . '</span>';
+                    $out[] = array_values($row);
                     continue;
                 }
 
@@ -289,6 +327,8 @@ abstract class BaseDriver
                     $out[] = array_values($row);
                 }
             }
+
+            $out[] = 'missing primary: ' . json_encode($missingPrimary);
         } else {
             $out = array();
         }

@@ -11,15 +11,17 @@
         <?php foreach ($rows as $row) { ?>
             <tr>
                 <?php
+                $i = 0;
                 foreach ($row as $rowItem) {
                     echo '
                     <td>';
-                    if(strlen($rowItem) > 100) {
-                        echo '<div class="field-value-compressed">' . htmlspecialchars($rowItem) . '</div>';
+                    if($i > 0 && strlen($rowItem) > 100) {
+                        echo '<div class="field-value-compressed">' . htmlspecialchars(strip_tags($rowItem)) . '</div>';
                     } else {
                         echo $rowItem;
                     }
                     echo '</td>';
+                    $i++;
                 } ?>
             </tr>
         <?php } ?>
