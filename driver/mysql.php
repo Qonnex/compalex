@@ -26,7 +26,7 @@ class Driver extends BaseDriver
                 ENGINE engine,
                 TABLE_COLLATION collation,
                 (
-                  SELECT column_name, column_key, extra 
+                  SELECT column_name
                   FROM information_schema.columns 
                   WHERE 
                     table_schema=DATABASE() AND 
@@ -42,6 +42,7 @@ class Driver extends BaseDriver
                 TABLE_TYPE = '{$type}'
                 {$filterTableNames}
             ";
+        
         return $this->_getCompareArray($query, false, true);
 
     }
