@@ -309,13 +309,13 @@ abstract class BaseDriver
             //     }
             // }
 
-            foreach ($resultFirst as $key => $row) {
+            foreach ($firstArrayValues as $key => $row) {
 
                 // if(array_search($row[$autoIncrementalField], array_column($resultSecond, $autoIncrementalField)) === false) {
                 //     continue;
                 // }
 
-                if(!is_array($resultSecond[$key])) {
+                if(!is_array($secondArrayValues[$key])) {
                     $row[$autoIncrementalField] = $row[$autoIncrementalField] . ' <span style="color: red;">resultSecond row is empty</span>';
                     $out[] = array_values($row);
                     continue;
@@ -328,14 +328,14 @@ abstract class BaseDriver
                 //     continue;
                 // }
 
-                $values = array_diff($resultFirst[$key], $resultSecond[$key]);
+                $values = array_diff($firstArrayValues[$key], $secondArrayValues[$key]);
                 // print_r($values);
                 // var_dump($resultFirst[$key]);
                 // var_dump($resultSecond[$key]);
                 // exit();
                 if(!empty($values)) {
                     foreach($values as $fieldName => $fieldValue) {
-                        $row[$fieldName] = $row[$fieldName] . ' <span style="color: red;">' . $resultSecond[$key][$fieldName] . '</span>';
+                        $row[$fieldName] = $row[$fieldName] . ' <span style="color: red;">' . $secondArrayValues[$key][$fieldName] . '</span>';
                     }
                     // $out[] = array_values($values);
                     $out[] = array_values($row);
