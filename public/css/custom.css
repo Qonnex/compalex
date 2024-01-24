@@ -22,3 +22,9 @@
     top: 0; /* Don't forget this, required for the stickiness */
     background-color: #CCC;
 }
+.data-table tr td:first-child {
+    position: sticky;
+    background-color: #CCC;
+    left: 0;
+    z-index: 1;
+}
