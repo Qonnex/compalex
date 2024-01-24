@@ -21,6 +21,11 @@ Data = {
     },
 
     hideTableData: function () {
+        Data.resetTableData();
         $('div.modal-background').removeClass('visible');
+    },
+
+    resetTableData: function() {
+        $('div.modal-background iframe').attr('src', '');
     }
 }

@@ -262,19 +262,33 @@ abstract class BaseDriver
         $resultSecond = $this->_select($query2, $this->_getSecondConnect(), SECOND_BASE_NAME);
 
         if ($resultFirst && $resultSecond) {
+            $firstArrayValues = [];
+            $secondArrayValues = [];
             //$firstRow = array_shift($resultFirst);
 
             $out[] = array_keys($resultFirst[array_key_first($resultFirst)]);
             //$out[] = array_values($firstRow);
 
             $missingPrimary = [];
-            foreach ($resultFirst as $key => $row) {
+            foreach($resultFirst as $row) {
+                $firstArrayValues[$row[$autoIncrementalField]] = $row;
                 if(array_search($row[$autoIncrementalField], array_column($resultSecond, $autoIncrementalField)) === false) {
-                    unset($resultFirst[$key]);
+                    //unset($resultFirst[$key]);
                     $missingPrimary[] = $row[$autoIncrementalField];
                 }
             }
-            $resultFirst = array_values($resultFirst);
+            foreach($resultSecond as $row) {
+                $secondArrayValues[$row[$autoIncrementalField]] = $row;
+            }
+
+            // $missingPrimary = [];
+            // foreach ($resultFirst as $key => $row) {
+            //     if(array_search($row[$autoIncrementalField], array_column($resultSecond, $autoIncrementalField)) === false) {
+            //         unset($resultFirst[$key]);
+            //         $missingPrimary[] = $row[$autoIncrementalField];
+            //     }
+            // }
+            // $resultFirst = array_values($resultFirst);
 
             // foreach ($resultFirst as $key => $row) {
             //     if($resultFirst[$key][$autoIncrementalField] == $resultSecond[$key][$autoIncrementalField]) {
@@ -308,11 +322,11 @@ abstract class BaseDriver
                 }
 
                 // if $resultFirst row $autoIncremental column is a value that does not exist in $resultSecond, then do not compare
-                if(!isset($resultSecond[$key][$autoIncrementalField]) || $resultFirst[$key][$autoIncrementalField] != $resultSecond[$key][$autoIncrementalField]) {
-                    $row[$autoIncrementalField] = $row[$autoIncrementalField] . ' <span style="color: red;">primary key ( ' . $resultFirst[$key][$autoIncrementalField] . ' ) is not the same in secondary database: ' . $resultSecond[$key][$autoIncrementalField] . '</span>';
-                    $out[] = array_values($row);
-                    continue;
-                }
+                // if(!isset($resultSecond[$key][$autoIncrementalField]) || $resultFirst[$key][$autoIncrementalField] != $resultSecond[$key][$autoIncrementalField]) {
+                //     $row[$autoIncrementalField] = $row[$autoIncrementalField] . ' <span style="color: red;">primary key ( ' . $resultFirst[$key][$autoIncrementalField] . ' ) is not the same in secondary database: ' . $resultSecond[$key][$autoIncrementalField] . '</span>';
+                //     $out[] = array_values($row);
+                //     continue;
+                // }
 
                 $values = array_diff($resultFirst[$key], $resultSecond[$key]);
                 // print_r($values);
